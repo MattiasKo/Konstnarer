@@ -1,0 +1,97 @@
+﻿@using Konstnarer.Models
+@model User
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Konstnärer</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Konstnarer.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Konstnarer</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center">
+                    <ul class="navbar nav justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Active</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                    <div class="navbar nav justify-content-right">
+
+                            @if (Model == null || Model.IsActive == false)
+                            {
+                              
+                                    @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                                    {
+                                     
+                                    <span>Epost:</span>
+                                <span>@Html.TextBoxFor(m=>m.Email, new { @class = "form-control col-md-3", @type = "email" })</span>
+
+                                <p class="text-warning"> @Html.ValidationMessageFor(x => x.Email)</p>
+                                    <span>Lösenord:</span>
+                                <span>@Html.TextBoxFor(m=>m.Password, new { @class = "form-control col-md-3",@type = "password" })</span>
+
+                                <p class="text-warning"> @Html.ValidationMessageFor(x => x.Password)</p>
+
+                               
+                                        <button type="submit" class="btn btn-success">Logga in</button>
+
+
+                                <a asp-controller="Register" asp-action="Index" >
+                                    <button type="button" class="btn btn-primary">Registera</button>                               
+                                </a>
+                                                
+                                    }
+                           
+                                
+                            }
+                            @if (Model != null && Model.IsActive == true)
+                        {
+                            
+                                await Html.RenderPartialAsync("~/Views/Login/ControllPanel.cshtml", Model);
+                            
+
+                        }
+
+                    </div>
+                </div>
+              
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Konstnarer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

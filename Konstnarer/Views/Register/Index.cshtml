@@ -1,0 +1,31 @@
+﻿@using Konstnarer.Models.Register;
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registrera";
+}
+<h4>Registrera nytt konto</h4>
+<hr />
+
+    @using(Html.BeginForm("Index","Register", FormMethod.Post))
+    {           
+                <td>Användarnamn:</td>
+        <td>@Html.TextBoxFor(m=>m.UserName, new { @class = "form-control col-md-3",@type = "text" }) <p class="text-warning"> @Html.ValidationMessageFor(x => x.UserName)</p></td>
+        
+           
+                <td>Epost:</td>
+        <td>@Html.TextBoxFor(m=>m.Email, new { @class = "form-control col-md-3", @type = "email" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.Email)</p></td>
+          
+                <td>Förnamn:</td>
+        <td>@Html.TextBoxFor(m=>m.FirstName, new { @class = "form-control  col-md-3" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.FirstName)</p></td>
+            
+                <td>Efternamn:</td>
+        <td>@Html.TextBoxFor(m=>m.LastName, new { @class = "form-control col-md-3" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.LastName)</p></td>
+            
+                <td>Lösenord:</td>
+        <td>@Html.TextBoxFor(m=>m.Password, new { @class = "form-control col-md-3",@type = "password" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.Password)</p></td>
+                <td>Bekräfta lösenord:</td>
+        <td>@Html.TextBoxFor(m=>m.ConfirmPassword, new { @class = "form-control col-md-3",@type = "password" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.ConfirmPassword)</p></td>
+            
+            <button type="submit" value="Submit" class="btn btn-primary">Registera</button>
+        
+    }
