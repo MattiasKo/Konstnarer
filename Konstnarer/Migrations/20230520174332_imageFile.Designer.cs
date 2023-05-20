@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Konstnarer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230517163335_Initial")]
-    partial class Initial
+    [Migration("20230520174332_imageFile")]
+    partial class imageFile
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,8 +58,8 @@ namespace Konstnarer.Migrations
                     b.Property<int>("PictureId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -82,11 +82,14 @@ namespace Konstnarer.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
+                    b.Property<byte[]>("ImageFile")
+                        .HasColumnType("varbinary(max)");
 
-                    b.Property<int>("PicSize")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("PicSize")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("PictureName")
                         .IsRequired()
@@ -135,6 +138,9 @@ namespace Konstnarer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -152,6 +158,7 @@ namespace Konstnarer.Migrations
                             IsActive = false,
                             Password = "5124admin",
                             Role = "Admin",
+                            UserId = new Guid("c799e26e-0c01-4cca-a19e-7a4b37496164"),
                             UserName = "Administratör"
                         });
                 });

@@ -28,6 +28,7 @@ namespace Konstnarer
         [DataType(DataType.Text,ErrorMessage = "Max 25 tecken.")]
         [Display(Name = "Efternamn")]
         public string? LastName { get; set; }
+        public Guid UserId { get; set; }
         public string Role { get; set; }
         public bool IsActive { get; set; } = false;
 

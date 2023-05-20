@@ -1,6 +1,4 @@
-﻿@using Konstnarer.Models
-@model User
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,41 +35,13 @@
                     </ul>
                     <div class="navbar nav justify-content-right">
 
-                            @if (Model == null || Model.IsActive == false)
-                            {
-                              
-                                    @using (Html.BeginForm("Login", "Login", FormMethod.Post))
-                                    {
-                                     
-                                    <span>Epost:</span>
-                                <span>@Html.TextBoxFor(m=>m.Email, new { @class = "form-control col-md-3", @type = "email" })</span>
-
-                                <p class="text-warning"> @Html.ValidationMessageFor(x => x.Email)</p>
-                                    <span>Lösenord:</span>
-                                <span>@Html.TextBoxFor(m=>m.Password, new { @class = "form-control col-md-3",@type = "password" })</span>
-
-                                <p class="text-warning"> @Html.ValidationMessageFor(x => x.Password)</p>
-
-                               
-                                        <button type="submit" class="btn btn-success">Logga in</button>
-
-
-                                <a asp-controller="Register" asp-action="Index" >
-                                    <button type="button" class="btn btn-primary">Registera</button>                               
-                                </a>
-                                                
-                                    }
-                           
-                                
-                            }
-                            @if (Model != null && Model.IsActive == true)
-                        {
-                            
-                                await Html.RenderPartialAsync("~/Views/Login/ControllPanel.cshtml", Model);
-                            
-
+        
+                        @{                      
+                                await Html.RenderPartialAsync("~/Views/Login/Index.cshtml");
                         }
 
+
+                      
                     </div>
                 </div>
               

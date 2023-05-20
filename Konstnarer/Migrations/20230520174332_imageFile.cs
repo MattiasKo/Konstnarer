@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Konstnarer.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class imageFile : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,7 @@ namespace Konstnarer.Migrations
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -49,10 +50,11 @@ namespace Konstnarer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PicSize = table.Column<int>(type: "int", nullable: false),
+                    PicSize = table.Column<long>(type: "bigint", nullable: false),
+                    ImageFile = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PictureName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AllowComments = table.Column<bool>(type: "bit", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -73,7 +75,7 @@ namespace Konstnarer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PictureId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
@@ -89,8 +91,8 @@ namespace Konstnarer.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "FirstName", "IsActive", "LastName", "Password", "Role", "UserName" },
-                values: new object[] { 1, "Admin@konst.se", null, false, null, "5124admin", "Admin", "Administratör" });
+                columns: new[] { "Id", "Email", "FirstName", "IsActive", "LastName", "Password", "Role", "UserId", "UserName" },
+                values: new object[] { 1, "Admin@konst.se", null, false, null, "5124admin", "Admin", new Guid("c799e26e-0c01-4cca-a19e-7a4b37496164"), "Administratör" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PicComments_PictureId",

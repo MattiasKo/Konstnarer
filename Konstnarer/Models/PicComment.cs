@@ -7,7 +7,7 @@ namespace Konstnarer.Models
         [Key]
         public int Id { get; set; }
         public int PictureId { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         [StringLength(250)]
         public string Comment { get; set; }
         

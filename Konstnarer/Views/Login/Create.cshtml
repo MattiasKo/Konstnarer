@@ -1,0 +1,19 @@
+﻿@model UploadImage
+@{
+    ViewData["Title"] = "Konstnärer.se";
+}
+<form method="post" enctype="multipart/form-data" asp-controller="login" asp-action="Upload">
+    <dl>
+        <dt>
+            Ladda up fil
+        </dt>
+        <dd>
+            <input name="files" type="file">
+        </dd>
+    </dl>
+    <input type="submit" value="Upload">
+</form>
+
+
+
+

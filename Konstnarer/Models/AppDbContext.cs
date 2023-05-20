@@ -23,7 +23,8 @@ namespace Konstnarer
                 Role = "Admin",
                 UserName = "Administratör",
                 Password = "5124admin",
-                Email = "Admin@konst.se"
+                Email = "Admin@konst.se",
+                UserId = Guid.NewGuid()
             });
         }
     }

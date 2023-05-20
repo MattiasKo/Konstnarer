@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Drawing;
 
 namespace Konstnarer.Models
 {
@@ -6,11 +8,16 @@ namespace Konstnarer.Models
     {
         [Key]
         public int Id { get; set; }
-        public int PicSize { get; set; } = 0;
+
+        public long PicSize { get; set; }
+   
+        [Display(Name ="Ladda up bild")]
+        public byte[]? ImageFile { get; set; }
         public DateTime UploadDate { get; set; }
         [StringLength(50, MinimumLength = 3)]
+        [Display(Name = "Bildnamn")]
         public string PictureName { get; set; }
-        public int OwnerId { get; set; }
+        public Guid OwnerId { get; set; }
         public bool AllowComments { get; set; }
         public List<PicComment>? PicComments { get; set; }
 

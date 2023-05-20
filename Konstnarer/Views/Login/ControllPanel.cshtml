@@ -1,7 +1,10 @@
-﻿@model User
+﻿@model UserLogin
 @{
     ViewData["Title"] = "Konstnär"+@Model.UserName;
 }
 <div>
-    Lyckad login välkommen! @Model.UserName
+        <a asp-controller="Login" asp-action="Create">
+            <button type="button" class="btn btn-info">Ladda up konst</button>
+        </a>
+
 </div>

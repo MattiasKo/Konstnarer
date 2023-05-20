@@ -53,13 +53,14 @@ namespace Konstnarer.Controllers
                 FirstName = regModel.FirstName,
                 LastName = regModel.LastName,
                 Role = "User",
-                IsActive = false
+                IsActive = false,
+                UserId = Guid.NewGuid(),
                 
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return RedirectToAction("RegisterComplete",user);
+            return RedirectToAction("RegisterComplete",regModel);
 
         }
 

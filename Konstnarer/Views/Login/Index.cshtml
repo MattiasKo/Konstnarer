@@ -1,7 +1,43 @@
-﻿@model User
+﻿
 @{
-    ViewData["Title"] = "Konstnär" + @Model.UserName;
+    ViewData["Title"] = "Konstnärer.se";
+    var loginInfo = ViewData["user"] as UserLogin;
+   
 }
-<div>
-    Välkommen till huvudsidan.
-</div>
+@{
+    if (loginInfo == null || loginInfo.IsActive == false)
+    {
+        @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+        {
+            
+            <span>Epost:</span>
+            <span> <input class="form-control col-md-3" type="email" name="email" /> </span>
+
+            <span>Lösenord:</span>
+            <input class="form-control col-md-3" type="password" name="password" />
+
+
+            <button type="submit" class="btn btn-success">Logga in</button>
+
+
+            <a asp-controller="Register" asp-action="Index">
+                <button type="button" class="btn btn-primary">Registera</button>
+            </a>
+
+        }
+    }else{
+
+        if (loginInfo.IsActive == true)
+        {
+
+            <div>inLoggad som: @loginInfo.UserName</div>
+            await Html.RenderPartialAsync("~/Views/Login/ControllPanel.cshtml", loginInfo);
+
+
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary">Registera</button>
+        }
+    }
+}
