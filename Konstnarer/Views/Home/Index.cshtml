@@ -1,8 +1,29 @@
-﻿@{
+﻿@*@model IList<Picture>*@
+    @model IEnumerable<Picture>
+@{
+
     ViewData["Title"] = "Konstnärer";
+
 }
 
 <div class="text-center">
     <h1 class="display-4">Välkommen till svenska konstnärer</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<table class="align-content-md-start">
+    @foreach (var picture in Model.OrderBy(p => p.Id))
+    {
+        <span class="border border-dark">@picture.PictureName</span>
+        <span class="border border-dark">
+            <img src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(picture.ImageFile))" />
+        </span>
+    }
+
+   @*load from wwwroot @foreach (var picture in Model.OrderBy(p => p.Id))
+    {
+    <span class="border border-dark">@picture.PictureName</span>
+        <span class="border border-dark">
+            <image src="/images/@picture.PictureName"></image>
+        </span>
+    }
+*@
+</table>

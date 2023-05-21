@@ -1,4 +1,5 @@
-﻿using Konstnarer.Models;
+﻿using Azure.Core;
+using Konstnarer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
@@ -25,11 +26,15 @@ namespace Konstnarer.Controllers
                     {
                         UserName = login.UserName,
                         UserId = login.UserId,
+                        IsActive = true
                     };
                     ViewData["user"] = userLogin;
-                    HttpContext.Session.SetString("Name", userLogin.UserName);
-                    HttpContext.Session.SetString("UserId", userLogin.UserId.ToString());
-                    userLogin.IsActive = true;
+
+                    string authId = Guid.NewGuid().ToString();
+                    HttpContext.Session.SetString("AuthId", authId);
+                    Response.Cookies.Append("AuthId",authId);
+                    //HttpContext.Session.SetString("UserId", userLogin.UserId.ToString());
+
                     return View("Index");
                 }
                 return View();
@@ -41,9 +46,12 @@ namespace Konstnarer.Controllers
         }
         public async Task<IActionResult> ControllPanel(UserLogin login)
         {
- 
+            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+            {
                 return View(login);
-            
+            }
+            return RedirectToAction("Error", "Home");
+
         }
         public async Task<IActionResult> Index()
         {
@@ -94,44 +102,36 @@ namespace Konstnarer.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
-
-
             if (files != null)
             {
                 using (var memoryStream = new MemoryStream())
                 {
                     await files.CopyToAsync(memoryStream);
-
-
                     // Upload the file if less than 2 MB
                     if (memoryStream.Length < 2097152)
                     {
                         var file = new Picture()
-                        {
-                            
+                        {  
                             AllowComments = true,
                             OwnerId = user.UserId,
                             PicSize = memoryStream.Length,
                             ImageFile = memoryStream.ToArray(),
-                            PictureName = "Test",
+                            PictureName = files.FileName,
                             UploadDate = DateTime.Now,
                         };
-
                         _context.Pictures.Add(file);
-
                         await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        ModelState.AddModelError("File", "The file is too large.");
+                        ModelState.AddModelError("File", "Filen får inte vara större än 2 MB.");
                     }
                 }
-
                 return View("UploadComplete");
             }
             return RedirectToAction("Error", "Home");
-
         }
 
         }
+
 }

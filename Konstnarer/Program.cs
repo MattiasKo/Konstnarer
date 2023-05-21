@@ -1,14 +1,19 @@
 using Konstnarer;
 using Konstnarer.Models;
+using Konstnarer.Models.Interfaces;
+using Konstnarer.Models.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IPictureRepository, PictureRepository>();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
