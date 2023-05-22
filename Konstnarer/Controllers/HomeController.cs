@@ -1,7 +1,9 @@
 ﻿using Konstnarer.Models;
 using Konstnarer.Models.Interfaces;
+using Konstnarer.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
@@ -20,45 +22,30 @@ namespace Konstnarer.Controllers
             _pictureRepository = pictureRepository;
         }
 
-        public async Task<ViewResult> index()
+        public async Task<ViewResult> index(UserLogin login)
         {
+            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+            {
+                login.IsActive = true;
+                ViewData["user"] = login;
+            }
             IEnumerable<Picture> pictures;
             pictures = _pictureRepository.GetAllPictures.ToList();
 
             return View(pictures);
         }
-        //public async Task<ViewResult> Index()
-        //{
-        //    IEnumerable<Picture> pictures;
-        //    pictures = _pictureRepository.GetAllPictures.ToList();
-
-        //    List<Picture> ConPictures = new List<Picture>();
-
-        //    foreach (Picture pic in pictures)
-        //    {
-        //        Picture converted = new Picture();
-        //        converted.PictureName = pic.PictureName;
-        //        converted.UploadDate = pic.UploadDate;
-        //        converted.OwnerId = pic.OwnerId;
-        //        converted.PicComments = pic.PicComments;
-        //        converted.AllowComments = pic.AllowComments;
-        //        converted.PathName = pic.PathName;
-        //        using (Image image = Image.FromStream(new MemoryStream(pic.ImageFile)))
-        //        {
-        //            image.Save(@"wwwroot/images/"+pic.PictureName, ImageFormat.Png);  // Or Png
-        //            converted.NewImage = image;
-        //        }
-        //       //converted.NewImage = byteArrayToImage(pic.ImageFile);
-        //        ConPictures.Add(converted);
-        //    }
-            
-
-        //    return View(ConPictures);
-        //}
-
-        public IActionResult Privacy()
+   
+        public IActionResult Detail(int picId)
         {
-            return View();
+            Picture picture = _context.Pictures.FirstOrDefault(p => p.Id == picId);
+            IEnumerable<PicComment> comments = _context.PicComments.Where(s => s.PictureId == picId);
+            
+            return View("Detail",new DetailPictureAndComments()
+            {
+                 picture = picture,
+                comments = comments,
+                
+        });
         }
 
         public IActionResult Error()
@@ -74,7 +61,37 @@ namespace Konstnarer.Controllers
 
 
         }
-        
+        public async Task<IActionResult> Comment(DetailPictureAndComments picComment, int picId)
+        {
+            Picture picture = _context.Pictures.FirstOrDefault(p => p.Id == picId);
+            IEnumerable<PicComment> comments = _context.PicComments.Where(s => s.PictureId == picId);
+            if (HttpContext.Session.GetString("UserName") == null)
+            {
+                return View("Detail",  new DetailPictureAndComments()
+                {
+                    picture = picture,
+                    comments = comments,
+
+                });
+            }
+            User userName = _context.Users.FirstOrDefault(f => f.UserName == HttpContext.Session.GetString("UserName"));
+            PicComment userComment = new PicComment();
+
+            userComment.Comment = picComment.usersComment;
+            userComment.UserId = userName.UserId;
+            userComment.PictureId = picId;
+
+            _context.PicComments.Add(userComment);
+            await _context.SaveChangesAsync();
+
+            return View("Detail",new DetailPictureAndComments()
+            {
+                picture = picture,
+                comments = comments,
+
+            });
+        }
+
 
     }
 }

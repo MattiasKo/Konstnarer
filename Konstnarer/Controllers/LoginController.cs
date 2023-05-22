@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Konstnarer.Models;
+using Konstnarer.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Konstnarer.Controllers
 
         public async Task<IActionResult> Login(string password, string email)
         {
+
             if (email != null && password != null)
             {
                 User login = _context.Users.FirstOrDefault(f => f.Email == email);
@@ -32,7 +34,9 @@ namespace Konstnarer.Controllers
 
                     string authId = Guid.NewGuid().ToString();
                     HttpContext.Session.SetString("AuthId", authId);
+                    HttpContext.Session.SetString("UserName",userLogin.UserName);
                     Response.Cookies.Append("AuthId",authId);
+                    Response.Cookies.Append("UserName", userLogin.UserName);
                     //HttpContext.Session.SetString("UserId", userLogin.UserId.ToString());
 
                     return View("Index");
@@ -48,33 +52,35 @@ namespace Konstnarer.Controllers
         {
             if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
             {
+                login.UserName = HttpContext.Session.GetString("UserName");
+                login.IsActive = true;
+                ViewData["user"] = login;
                 return View(login);
             }
             return RedirectToAction("Error", "Home");
 
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(UserLogin login)
         {
+            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+            {
+                login.UserName = HttpContext.Session.GetString("UserName");
+                login.IsActive = true;
+                ViewData["user"] = login;
+                return View();
+            }
 
             return View();
 
         }
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(UserLogin login)
         {
-            Guid userid = Guid.Parse(HttpContext.Session.GetString("UserId"));
-            User user = _context.Users.FirstOrDefault(s => s.UserId == userid);
-
-            if (user.UserId == userid)
+            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
             {
-                UserLogin userLogin = new()
-                {
-                    UserName = user.UserName,
-                    UserId = user.UserId,
-                    IsActive = true
-                };
-                ViewData["user"] = userLogin;
-                return View();
-                
+                login.UserName = HttpContext.Session.GetString("UserName");
+                login.IsActive = true;
+                ViewData["user"] = login;
+                return View();  
             }
             else
             {
@@ -83,26 +89,20 @@ namespace Konstnarer.Controllers
         }
         [HttpPost]
      
-        public async Task<IActionResult> Upload(IFormFile files)
+        public async Task<IActionResult> Upload(IFormFile files, UserLogin login, bool AllowComments)
         {
-            Guid userid = Guid.Parse(HttpContext.Session.GetString("UserId"));
-            User user = _context.Users.FirstOrDefault(s => s.UserId == userid);
-
-            if (user.UserId == userid)
+            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
             {
-                UserLogin userLogin = new()
-                {
-                    UserName = user.UserName,
-                    UserId = user.UserId,
-                    IsActive = true
-                };
-                ViewData["user"] = userLogin;
+                login.UserName = HttpContext.Session.GetString("UserName");
+                login.IsActive= true;
+                ViewData["user"] = login;
             }
             else
             {
                 return RedirectToAction("Error", "Home");
             }
-            if (files != null)
+
+            if (files.FileName.EndsWith(".png")|| files.FileName.EndsWith(".jpg")|| files.FileName.EndsWith(".bmp")|| files.FileName.EndsWith(".gif"))
             {
                 using (var memoryStream = new MemoryStream())
                 {
@@ -112,8 +112,8 @@ namespace Konstnarer.Controllers
                     {
                         var file = new Picture()
                         {  
-                            AllowComments = true,
-                            OwnerId = user.UserId,
+                            AllowComments = AllowComments,
+                            OwnerId = login.UserId,
                             PicSize = memoryStream.Length,
                             ImageFile = memoryStream.ToArray(),
                             PictureName = files.FileName,
@@ -131,7 +131,39 @@ namespace Konstnarer.Controllers
             }
             return RedirectToAction("Error", "Home");
         }
+        [HttpPost]
+        public async Task<IActionResult> Comment(DetailPictureAndComments picComment,int picId)
+        {
+            Picture picture = _context.Pictures.FirstOrDefault(p => p.Id == picId);
+            IEnumerable<PicComment> comments = _context.PicComments.Where(s => s.PictureId == picId);
+            if (HttpContext.Session.GetString("UserName") == null)
+            {
+                return RedirectToAction("Detail","Home", new DetailPictureAndComments()
+                {
+                    picture = picture,
+                    comments = comments,
 
+                });
+            }
+            User userName = _context.Users.FirstOrDefault(f => f.UserName == HttpContext.Session.GetString("UserName"));
+            PicComment userComment = new PicComment();
+
+            userComment.Comment = picComment.usersComment;
+            userComment.UserId = userName.UserId;
+            userComment.PictureId = picId;
+
+            _context.PicComments.Add(userComment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Detail","Home", new DetailPictureAndComments()
+            {
+                picture = picture,
+                comments = comments,
+
+            });
         }
+
+    }
+    
 
 }

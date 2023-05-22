@@ -1,0 +1,32 @@
+﻿@using Konstnarer.Models.ViewModels
+@model DetailPictureAndComments
+
+
+<div class="text-center">
+    <h1 class="display-4">@Model.picture.PictureName</h1>
+</div>
+    <img src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.picture.ImageFile))" />
+
+<div>
+    @if (Model.picture.AllowComments == true)
+    {
+        <div class="CommentSection">
+            <h4>Kommentarer:</h4>
+            @foreach (var comment in Model.comments)
+            {
+                <div class="kommentar">
+                    <p>@comment.Comment</p>
+                </div>
+            }
+        </div>
+        <h3>Ge en kommentar</h3>
+        @using (Html.BeginForm("Comment", "Home", FormMethod.Post))
+        {
+            <td>@Html.TextBoxFor(m=>m.usersComment, new { @class = "form-control col-md-3",@type = "text" })</td>
+            <input type="text" name="picId" value="@Model.picture.Id" hidden>
+            <button type="submit" value="Submit" class="btn btn-success">Skicka kommentar</button>
+
+        }
+
+    }
+</div>

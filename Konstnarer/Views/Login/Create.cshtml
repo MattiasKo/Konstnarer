@@ -5,11 +5,15 @@
 <form method="post" enctype="multipart/form-data" asp-controller="login" asp-action="Upload">
     <dl>
         <dt>
-            Ladda up fil
+            Ladda up Konst bild:
         </dt>
-        <dd>
-            <input name="files" type="file">
-        </dd>
+        <dt>
+            <input name="files" type="file" accept="image/png, image/jpeg, image/gif, image/bmp" />
+        </dt>
+        <dt>
+            <input type="checkbox" name="AllowComments" checked>
+            <label for="AllowComments">Tillåt kommentrer</label>
+        </dt>
     </dl>
     <input type="submit" value="Upload">
 </form>

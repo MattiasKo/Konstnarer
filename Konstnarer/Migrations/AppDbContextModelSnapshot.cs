@@ -164,7 +164,6 @@ namespace Konstnarer.Migrations
                 {
                     b.HasOne("Konstnarer.Models.Picture", null)
                         .WithMany("PicComments")
-                        .HasForeignKey("PictureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

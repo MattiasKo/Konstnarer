@@ -16,3 +16,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+.img-thumbnail {
+    width: 200px;
+    padding: 5px;
+    height: 200px;
+}
+.img-thumbnail:hover {
+        width: 200px;
+        padding: 0px;
+}

@@ -1,4 +1,5 @@
 ﻿using Konstnarer.Models.Interfaces;
+using Konstnarer.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Konstnarer.Models.Repository
@@ -41,7 +42,7 @@ namespace Konstnarer.Models.Repository
 
         public Picture GetPictureById(int pictureId)
         {
-            return _context.Pictures.FirstOrDefault(p => p.Id == pictureId);
+            return (_context.Pictures.FirstOrDefault(p => p.Id == pictureId));
         }
 
         public async Task SaveAsync()

@@ -9,21 +9,15 @@
 <div class="text-center">
     <h1 class="display-4">Välkommen till svenska konstnärer</h1>
 </div>
-<table class="align-content-md-start">
-    @foreach (var picture in Model.OrderBy(p => p.Id))
-    {
-        <span class="border border-dark">@picture.PictureName</span>
-        <span class="border border-dark">
-            <img src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(picture.ImageFile))" />
-        </span>
-    }
 
-   @*load from wwwroot @foreach (var picture in Model.OrderBy(p => p.Id))
-    {
-    <span class="border border-dark">@picture.PictureName</span>
-        <span class="border border-dark">
-            <image src="/images/@picture.PictureName"></image>
-        </span>
-    }
-*@
-</table>
+@foreach (var picture in Model.OrderBy(p => p.Id))
+{
+     <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Detail">
+
+            <button type="submit" name="picId" value="@picture.Id">
+            <img class="img-thumbnail" src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(picture.ImageFile))" />
+            </button>
+    </form>
+    
+}
+</div>
