@@ -1,32 +1,58 @@
 ﻿@using Konstnarer.Models.ViewModels
 @model DetailPictureAndComments
 
+@{
+    ViewData["Title"] = "Konstnärer.se";
+    var loginInfo = ViewData["user"] as UserLogin;
 
+}
 <div class="text-center">
-    <h1 class="display-4">@Model.picture.PictureName</h1>
+    <h1 class="display-4">@Model.Pictures.PictureName</h1>
 </div>
-    <img src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.picture.ImageFile))" />
+    <img src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.Pictures.ImageFile))" />
 
 <div>
-    @if (Model.picture.AllowComments == true)
+    @if (Model.Pictures.AllowComments == true)
     {
         <div class="CommentSection">
-            <h4>Kommentarer:</h4>
-            @foreach (var comment in Model.comments)
+           
+            @if (loginInfo == null || loginInfo.IsActive == false)
             {
+                <h3>Kommentera</h3>
+                <button type="button" class="btn btn-primary">Registera dig</button>
+            }
+            else
+            {
+                <div class="border border-success">
+                <h3>Ge en kommentar</h3>
+                @using (Html.BeginForm("Comment", "Home", FormMethod.Post))
+                {
+                    <td>@Html.TextBoxFor(m=>m.usersComment, new { @class = "form-control col-md-3",@type = "text" })</td>
+                    <input type="text" name="picId" value="@Model.Pictures.Id" hidden>
+                    <button type="submit" value="Submit" class="btn btn-success">Skicka kommentar</button>
+
+                }
+                </div>
+                
+            }
+            <h5>Kommentarer:</h5>
+            @foreach (var item in Model.pictureComments)
+            {
+                <div class="border border-secondary">
+                @foreach(var item2 in Model.Users)
+                {
+                    if (item2.UserId == item.UserId)
+                    {
+                        <p class="text-primary">@item2.UserName</p>
+                    }
+                }
                 <div class="kommentar">
-                    <p>@comment.Comment</p>
+                    <p>@item.Comment</p>
+                </div>
                 </div>
             }
         </div>
-        <h3>Ge en kommentar</h3>
-        @using (Html.BeginForm("Comment", "Home", FormMethod.Post))
-        {
-            <td>@Html.TextBoxFor(m=>m.usersComment, new { @class = "form-control col-md-3",@type = "text" })</td>
-            <input type="text" name="picId" value="@Model.picture.Id" hidden>
-            <button type="submit" value="Submit" class="btn btn-success">Skicka kommentar</button>
-
-        }
+       
 
     }
 </div>

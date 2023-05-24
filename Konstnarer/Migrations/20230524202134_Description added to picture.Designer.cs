@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Konstnarer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230520174332_imageFile")]
-    partial class imageFile
+    [Migration("20230524202134_Description added to picture")]
+    partial class Descriptionaddedtopicture
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,28 @@ namespace Konstnarer.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Konstnarer.Models.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PictureId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PictureId")
+                        .IsUnique();
+
+                    b.ToTable("Favorite");
                 });
 
             modelBuilder.Entity("Konstnarer.Models.PicComment", b =>
@@ -158,9 +180,18 @@ namespace Konstnarer.Migrations
                             IsActive = false,
                             Password = "5124admin",
                             Role = "Admin",
-                            UserId = new Guid("c799e26e-0c01-4cca-a19e-7a4b37496164"),
+                            UserId = new Guid("b525969b-2c77-4e4d-b7ef-857e4ed5f7bc"),
                             UserName = "Administratör"
                         });
+                });
+
+            modelBuilder.Entity("Konstnarer.Models.Favorite", b =>
+                {
+                    b.HasOne("Konstnarer.Models.Picture", null)
+                        .WithOne("Favorites")
+                        .HasForeignKey("Konstnarer.Models.Favorite", "PictureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Konstnarer.Models.PicComment", b =>
@@ -186,6 +217,8 @@ namespace Konstnarer.Migrations
 
             modelBuilder.Entity("Konstnarer.Models.Picture", b =>
                 {
+                    b.Navigation("Favorites");
+
                     b.Navigation("PicComments");
                 });
 #pragma warning restore 612, 618

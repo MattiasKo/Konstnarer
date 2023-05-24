@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Konstnärer.se";
 }
-<form method="post" enctype="multipart/form-data" asp-controller="login" asp-action="Upload">
+<form method="post" enctype="multipart/form-data" asp-controller="Login" asp-action="Upload">
     <dl>
         <dt>
             Ladda up Konst bild:
@@ -11,11 +11,23 @@
             <input name="files" type="file" accept="image/png, image/jpeg, image/gif, image/bmp" />
         </dt>
         <dt>
-            <input type="checkbox" name="AllowComments" checked>
-            <label for="AllowComments">Tillåt kommentrer</label>
+            <input type="text" name="Titel"/>
+            <label for="Titel">Titel</label>
+         
         </dt>
+        <dt>
+            <input type="text" name="Description"/>
+            <label for="Description">En beskrivning</label>
+         
+        </dt>
+        <dt>
+            <input type="checkbox" value="true" name="AllowComments" checked />
+            <label for="AllowComments">Tillåt kommentarer</label>
+           
+        </dt>
+    
     </dl>
-    <input type="submit" value="Upload">
+    <input type="submit">
 </form>
 
 

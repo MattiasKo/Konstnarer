@@ -1,10 +1,12 @@
-﻿@model UserLogin
+﻿
 @{
     ViewData["Title"] = "Konstnär"+@Model.UserName;
 }
-<div>
+<div class="align-content-end">
         <a asp-controller="Login" asp-action="Create">
             <button type="button" class="btn btn-info">Ladda up konst</button>
         </a>
-
+    <a asp-controller="Profile" asp-action="Index">
+        <button type="button" class="btn btn-info">Min profil</button>
+    </a>
 </div>

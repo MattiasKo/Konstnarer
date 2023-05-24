@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Konstnarer.Migrations
 {
     /// <inheritdoc />
-    public partial class imageFile : Migration
+    public partial class Descriptionaddedtopicture : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,6 +69,26 @@ namespace Konstnarer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Favorite",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PictureId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Favorite", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Favorite_Pictures_PictureId",
+                        column: x => x.PictureId,
+                        principalTable: "Pictures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PicComments",
                 columns: table => new
                 {
@@ -92,7 +112,13 @@ namespace Konstnarer.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "FirstName", "IsActive", "LastName", "Password", "Role", "UserId", "UserName" },
-                values: new object[] { 1, "Admin@konst.se", null, false, null, "5124admin", "Admin", new Guid("c799e26e-0c01-4cca-a19e-7a4b37496164"), "Administratör" });
+                values: new object[] { 1, "Admin@konst.se", null, false, null, "5124admin", "Admin", new Guid("b525969b-2c77-4e4d-b7ef-857e4ed5f7bc"), "Administratör" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Favorite_PictureId",
+                table: "Favorite",
+                column: "PictureId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PicComments_PictureId",
@@ -108,6 +134,9 @@ namespace Konstnarer.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Favorite");
+
             migrationBuilder.DropTable(
                 name: "PicComments");
 

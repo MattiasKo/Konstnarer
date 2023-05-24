@@ -30,7 +30,7 @@
         if (loginInfo.IsActive == true)
         {
 
-            <div>inLoggad som: @loginInfo.UserName</div>
+            <div class="flex-xl-shrink-1">InLoggad som: @loginInfo.UserName </div>
             await Html.RenderPartialAsync("~/Views/Login/ControllPanel.cshtml", loginInfo);
 
 

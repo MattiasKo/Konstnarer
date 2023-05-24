@@ -25,3 +25,13 @@ body {
         width: 200px;
         padding: 0px;
 }
+button, input[type="submit"] {
+    color: inherit;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+}
+.container {
+    display: flex; /* or inline-flex */
+}

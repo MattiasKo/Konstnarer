@@ -2,8 +2,10 @@
 {
     public class DetailPictureAndComments
     {
-        public Picture picture { get; set; }
-        public IEnumerable<PicComment> comments { get; set; }
+        public Picture Pictures { get; set; }
+        public List<PicComment> pictureComments { get; set; }
+        public List<User> Users { get; set; }
         public string usersComment { get; set; }
+        
     }
 }

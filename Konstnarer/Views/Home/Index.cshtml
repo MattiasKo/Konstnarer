@@ -1,23 +1,31 @@
 ﻿@*@model IList<Picture>*@
     @model IEnumerable<Picture>
 @{
-
-    ViewData["Title"] = "Konstnärer";
+    ViewData["Title"] = "Konstnärer.se";
+    var loginInfo = ViewData["user"] as UserLogin;
 
 }
 
-<div class="text-center">
-    <h1 class="display-4">Välkommen till svenska konstnärer</h1>
-</div>
+
+    <h1 class="text-center">Välkommen till svenska konstnärer</h1>
+
 
 @foreach (var picture in Model.OrderBy(p => p.Id))
 {
-     <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Detail">
+    <div class="card d-inline-flex" style="width: 18rem;">
+      
+    
+     <form method="post" asp-controller="Home" asp-action="Detail">
 
-            <button type="submit" name="picId" value="@picture.Id">
+            <button class="card-img-top" type="submit" name="picId" value="@picture.Id">
             <img class="img-thumbnail" src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(picture.ImageFile))" />
             </button>
+            <div class="card-body">
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
     </form>
+
+    </div>
+
     
 }
-</div>

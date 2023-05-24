@@ -18,12 +18,13 @@ namespace Konstnarer.Models
         [Display(Name = "Bildnamn")]
         public string PictureName { get; set; }
         [NotMapped]
-        public string? PathName { get; set; }
+        public string? Description { get; set; }
         public Guid OwnerId { get; set; }
         public bool AllowComments { get; set; }
         public List<PicComment>? PicComments { get; set; }
         [NotMapped]
         public Image? NewImage { get; set; }
+        public Favorite? Favorites { get; set; }
 
 
     }

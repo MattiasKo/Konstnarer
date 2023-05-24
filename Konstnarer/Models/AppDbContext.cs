@@ -14,6 +14,7 @@ namespace Konstnarer
         public DbSet<Category> Categories { get; set; }
         public DbSet<PicComment> PicComments { get; set; }
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<ProfileComment> ProfileComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -19,7 +19,7 @@ namespace Konstnarer.Controllers
         public async Task<IActionResult> Login(string password, string email)
         {
 
-            if (email != null && password != null)
+            if (email != null || password != null)
             {
                 User login = _context.Users.FirstOrDefault(f => f.Email == email);
                 if (login.Password == password)
@@ -35,8 +35,15 @@ namespace Konstnarer.Controllers
                     string authId = Guid.NewGuid().ToString();
                     HttpContext.Session.SetString("AuthId", authId);
                     HttpContext.Session.SetString("UserName",userLogin.UserName);
-                    Response.Cookies.Append("AuthId",authId);
-                    Response.Cookies.Append("UserName", userLogin.UserName);
+                    HttpContext.Session.SetString("UserId", (userLogin.UserId).ToString());
+                    Response.Cookies.Append("AuthId", authId, new Microsoft.AspNetCore.Http.CookieOptions
+                    {
+                        Expires = DateTime.Now.AddMinutes(10)
+                    });
+                    Response.Cookies.Append("UserName", userLogin.UserName, new Microsoft.AspNetCore.Http.CookieOptions
+                    {
+                        Expires = DateTime.Now.AddMinutes(10)
+                    });
                     //HttpContext.Session.SetString("UserId", userLogin.UserId.ToString());
 
                     return View("Index");
@@ -50,24 +57,31 @@ namespace Konstnarer.Controllers
         }
         public async Task<IActionResult> ControllPanel(UserLogin login)
         {
-            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
             {
                 login.UserName = HttpContext.Session.GetString("UserName");
+                login.UserId = Guid.Parse(HttpContext.Session.GetString("UserId"));
                 login.IsActive = true;
                 ViewData["user"] = login;
-                return View(login);
             }
             return RedirectToAction("Error", "Home");
 
         }
         public async Task<IActionResult> Index(UserLogin login)
         {
-            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+          
+            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
             {
                 login.UserName = HttpContext.Session.GetString("UserName");
+                login.UserId = Guid.Parse(HttpContext.Session.GetString("UserId"));
                 login.IsActive = true;
                 ViewData["user"] = login;
-                return View();
+            }
+            else
+            {
+                login.UserName = "Anonym";
+                login.IsActive = false;
+                ViewData["user"] = login;
             }
 
             return View();
@@ -75,12 +89,16 @@ namespace Konstnarer.Controllers
         }
         public async Task<IActionResult> Create(UserLogin login)
         {
-            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+
+            UserLogin login1 = new UserLogin();
+            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
             {
                 login.UserName = HttpContext.Session.GetString("UserName");
+                login.UserId = Guid.Parse(HttpContext.Session.GetString("UserId"));
                 login.IsActive = true;
                 ViewData["user"] = login;
-                return View();  
+
+                return View();
             }
             else
             {
@@ -89,17 +107,22 @@ namespace Konstnarer.Controllers
         }
         [HttpPost]
      
-        public async Task<IActionResult> Upload(IFormFile files, UserLogin login, bool AllowComments)
+        public async Task<IActionResult> Upload(IFormFile files, UserLogin login, bool AllowComments, string Description,string Titel)
         {
-            if (Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+
+            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
             {
                 login.UserName = HttpContext.Session.GetString("UserName");
-                login.IsActive= true;
+                login.UserId = Guid.Parse(HttpContext.Session.GetString("UserId"));
+                login.IsActive = true;
                 ViewData["user"] = login;
             }
+
             else
             {
-                return RedirectToAction("Error", "Home");
+                login.UserName = "Anonym";
+                login.IsActive = false;
+                ViewData["user"] = login;
             }
 
             if (files.FileName.EndsWith(".png")|| files.FileName.EndsWith(".jpg")|| files.FileName.EndsWith(".bmp")|| files.FileName.EndsWith(".gif"))
@@ -116,52 +139,23 @@ namespace Konstnarer.Controllers
                             OwnerId = login.UserId,
                             PicSize = memoryStream.Length,
                             ImageFile = memoryStream.ToArray(),
-                            PictureName = files.FileName,
+                            PictureName = Titel,
                             UploadDate = DateTime.Now,
+                            Description = Description
                         };
                         _context.Pictures.Add(file);
                         await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        ModelState.AddModelError("File", "Filen får inte vara större än 2 MB.");
+                        ModelState.AddModelError("File", "Filen får inte vara större än 2 MB. Måste vara en bild");
                     }
                 }
                 return View("UploadComplete");
             }
             return RedirectToAction("Error", "Home");
         }
-        [HttpPost]
-        public async Task<IActionResult> Comment(DetailPictureAndComments picComment,int picId)
-        {
-            Picture picture = _context.Pictures.FirstOrDefault(p => p.Id == picId);
-            IEnumerable<PicComment> comments = _context.PicComments.Where(s => s.PictureId == picId);
-            if (HttpContext.Session.GetString("UserName") == null)
-            {
-                return RedirectToAction("Detail","Home", new DetailPictureAndComments()
-                {
-                    picture = picture,
-                    comments = comments,
-
-                });
-            }
-            User userName = _context.Users.FirstOrDefault(f => f.UserName == HttpContext.Session.GetString("UserName"));
-            PicComment userComment = new PicComment();
-
-            userComment.Comment = picComment.usersComment;
-            userComment.UserId = userName.UserId;
-            userComment.PictureId = picId;
-
-            _context.PicComments.Add(userComment);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Detail","Home", new DetailPictureAndComments()
-            {
-                picture = picture,
-                comments = comments,
-
-            });
-        }
+       
 
     }
     
