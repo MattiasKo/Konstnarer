@@ -43,7 +43,12 @@
                 {
                     if (item2.UserId == item.UserId)
                     {
-                        <p class="text-primary">@item2.UserName</p>
+                            <form method="post" asp-controller="Profile" asp-action="Index">
+                                <button class="text-primary">
+                                    <input type="text" value="@item2.UserId" name="userId" hidden>
+                                    <p>@item2.UserName</p>
+                                </button>
+                            </form>
                     }
                 }
                 <div class="kommentar">

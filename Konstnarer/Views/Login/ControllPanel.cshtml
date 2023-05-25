@@ -6,7 +6,9 @@
         <a asp-controller="Login" asp-action="Create">
             <button type="button" class="btn btn-info">Ladda up konst</button>
         </a>
-    <a asp-controller="Profile" asp-action="Index">
-        <button type="button" class="btn btn-info">Min profil</button>
-    </a>
+    <form method="post"  asp-controller="Profile" asp-action="Index">
+        <button type="submit" class="btn btn-info">Min profil
+            <input type="text" value="@Model.UserId" name="userId" hidden/>
+        </button>
+    </form>
 </div>

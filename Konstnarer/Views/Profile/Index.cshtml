@@ -15,6 +15,7 @@
             </tr>
                 @foreach (var picture in Model.UsersPictures.Where(c => c.OwnerId == Model.ProfileUser.UserId))
                 {
+                    <div class="card d-inline-flex" style="width: 18rem;">
                  <tr>
                     <td>
                         <form method="post" asp-controller="Home" asp-action="Detail">
@@ -28,6 +29,7 @@
                         </form>
                     </td>
                 </tr>
+                </div>
                 }
 
         </table>
@@ -35,23 +37,37 @@
     <div class="column">
         <table>
             <tr>
-                <th>Gästbok</th>
+                <th>Gästbok
                 @using (Html.BeginForm("Comment", "Profile", FormMethod.Post))
                 {
-                    <td>@Html.TextBoxFor(c=>c.usersComment, new { @class = "form-control col-md-3",@type = "text" })</td>
+                    @Html.TextBoxFor(c=>c.usersComment, new { @class = "form-control col-md-3",@type = "text" })
+                        <button type="submit" value="Submit" class="btn btn-success">Skicka kommentar</button>
                     <input type="text" name="commentTo" value="@Model.ProfileUser.UserId" hidden>
                     <input type="text" name="CommentingUserId" value="@loginInfo.UserId" hidden>
-                    <button type="submit" value="Submit" class="btn btn-success">Skicka kommentar</button>
 
                 }
+            </th>
             </tr>
             @foreach (var comment in Model.comments.Where(c => c.PersonId == Model.ProfileUser.UserId))
             {
                 <tr>
                     <td>
-                      
+                    <div class="card d-inline-flex" style="width: 18rem;">
                         <div class="card-body">
+                                @foreach (var user in Model.users)
+                                {
+                                @if (user.UserId == comment.UserId)
+                                    {
+                                    <form method="post" asp-controller="Profile" asp-action="Index">
+                                        <button class="text-primary">
+                                            <input type="text" value="@user.UserId" name="userId" hidden>
+                                        <p>@user.UserName</p>
+                                        </button>
+                                     </form>
+                                    }
+                                }
                             <p class="card-text">@comment.Comment</p>
+                        </div>
                         </div>
                     </td>
                 </tr>

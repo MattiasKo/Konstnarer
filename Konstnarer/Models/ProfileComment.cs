@@ -11,7 +11,8 @@ namespace Konstnarer.Models
             public Guid UserId { get; set; }//den som ger commentaren
             [StringLength(250)]
             public string Comment { get; set; }
+            public DateTime Date { get; set; }
 
-        }
+    }
     
 }
