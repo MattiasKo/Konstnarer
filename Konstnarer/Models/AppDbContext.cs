@@ -15,6 +15,8 @@ namespace Konstnarer
         public DbSet<PicComment> PicComments { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<ProfileComment> ProfileComments { get; set; }
+        public DbSet<ValidateUser> ValidateUsers { get; set; }
+        public DbSet<ChangePassword> ChangePasswords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

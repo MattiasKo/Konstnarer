@@ -1,0 +1,17 @@
+﻿@model ChangePassword
+@{
+}
+<h1>Skriv nytt lösenord</h1>
+
+
+@using (Html.BeginForm("NewPassword", "ForgottPassword", FormMethod.Post))
+{
+    <input type="text" name="id" value='@TempData["id"]' hidden>
+    <td>Nytt lösenord:</td>
+    <td>@Html.TextBoxFor(m=>m.Password, new { @class = "form-control col-md-3",@type = "password" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.Password)</p></td>
+    <td>Bekräfta lösenord:</td>
+    <td>@Html.TextBoxFor(m=>m.ConfirmPassword, new { @class = "form-control col-md-3",@type = "password" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.ConfirmPassword)</p></td>
+
+    <button type="submit" value="Submit" class="btn btn-success">Byt lösenord</button>
+
+}

@@ -2,13 +2,19 @@
 @{
     ViewData["Title"] = "Konstnär"+@Model.UserName;
 }
-<div class="align-content-end">
-        <a asp-controller="Login" asp-action="Create">
-            <button type="button" class="btn btn-info">Ladda up konst</button>
-        </a>
-    <form method="post"  asp-controller="Profile" asp-action="Index">
-        <button type="submit" class="btn btn-info">Min profil
-            <input type="text" value="@Model.UserId" name="userId" hidden/>
+<div class="d-inline-flex" style="width: 18rem;">
+    <form method="post" asp-controller="Profile" asp-action="Index">
+        <button type="submit" class="btn btn-info">
+            Profil
+            <input type="text" value="@Model.UserId" name="userId" hidden />
         </button>
     </form>
+        <a asp-controller="Login" asp-action="Create">
+            <button type="button" class="btn btn-info">Ladda up</button>
+        </a>
+    <a asp-controller="Login" asp-action="Logout">
+        <button type="button" class="btn btn-secondary">Logga ut</button>
+    </a>
+   
+    
 </div>

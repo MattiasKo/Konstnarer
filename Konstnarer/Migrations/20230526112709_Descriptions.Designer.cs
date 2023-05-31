@@ -4,6 +4,7 @@ using Konstnarer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Konstnarer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230526112709_Descriptions")]
+    partial class Descriptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,35 +40,6 @@ namespace Konstnarer.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Konstnarer.Models.ChangePassword", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ConfirmPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("RouteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ChangePasswords");
                 });
 
             modelBuilder.Entity("Konstnarer.Models.Favorite", b =>
@@ -133,9 +107,6 @@ namespace Konstnarer.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("ImageFile")
                         .HasColumnType("varbinary(max)");
 
@@ -187,26 +158,6 @@ namespace Konstnarer.Migrations
                     b.ToTable("ProfileComments");
                 });
 
-            modelBuilder.Entity("Konstnarer.Models.ValidateUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("RouteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ValidateUsers");
-                });
-
             modelBuilder.Entity("Konstnarer.User", b =>
                 {
                     b.Property<int>("Id")
@@ -224,9 +175,6 @@ namespace Konstnarer.Migrations
                         .HasColumnType("nvarchar(25)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsValidated")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -260,10 +208,9 @@ namespace Konstnarer.Migrations
                             Id = 1,
                             Email = "Admin@konst.se",
                             IsActive = false,
-                            IsValidated = false,
                             Password = "5124admin",
                             Role = "Admin",
-                            UserId = new Guid("2ef42f24-91b8-444f-919e-00dded839fec"),
+                            UserId = new Guid("e0daff77-3844-4559-a587-6cc38754b539"),
                             UserName = "Administratör"
                         });
                 });

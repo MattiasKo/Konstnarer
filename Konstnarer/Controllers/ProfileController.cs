@@ -64,7 +64,7 @@ namespace Konstnarer.Controllers
             comment.Date = DateTime.Now;
             _context.ProfileComments.Add(comment);
             _context.SaveChanges();
-            return Redirect("Index");
+            return RedirectToAction("Index", new {userId = commentTo });
             
         }
     } 

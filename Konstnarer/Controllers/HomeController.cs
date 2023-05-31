@@ -47,12 +47,15 @@ namespace Konstnarer.Controllers
                 login.IsActive = false;
                 ViewData["user"] = login;
             }
+           
             Picture picture = _context.Pictures.FirstOrDefault(p => p.Id == picId);
             List<PicComment> picComments = _context.PicComments.Where(pc => pc.PictureId == picId).ToList();
             List<Guid> userIds = picComments.Select(pc => pc.UserId).ToList();
             List<User> users = _context.Users.Where(u=>userIds.Contains(u.UserId)).ToList();
+            User user = _context.Users.FirstOrDefault(u => u.UserId == picture.OwnerId);
             DetailPictureAndComments viewModel = new DetailPictureAndComments()
             {
+                Owner = user,
                 Pictures = picture,
                 pictureComments = picComments,
                 Users = users

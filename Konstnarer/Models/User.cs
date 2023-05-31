@@ -30,6 +30,7 @@ namespace Konstnarer
         public string? LastName { get; set; }
         public Guid UserId { get; set; }
         public string Role { get; set; }
+        public bool IsValidated { get; set; } = false;
         public bool IsActive { get; set; } = false;
 
     }

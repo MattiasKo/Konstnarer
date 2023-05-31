@@ -17,7 +17,7 @@ namespace Konstnarer.Models
         [StringLength(50, MinimumLength = 3)]
         [Display(Name = "Bildnamn")]
         public string PictureName { get; set; }
-        [NotMapped]
+       
         public string? Description { get; set; }
         public Guid OwnerId { get; set; }
         public bool AllowComments { get; set; }

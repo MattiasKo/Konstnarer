@@ -4,6 +4,7 @@ using Konstnarer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Konstnarer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230529143201_newinfo")]
+    partial class newinfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,9 +135,6 @@ namespace Konstnarer.Migrations
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("ImageFile")
                         .HasColumnType("varbinary(max)");
@@ -263,7 +263,7 @@ namespace Konstnarer.Migrations
                             IsValidated = false,
                             Password = "5124admin",
                             Role = "Admin",
-                            UserId = new Guid("2ef42f24-91b8-444f-919e-00dded839fec"),
+                            UserId = new Guid("77784095-f9fb-41b7-a324-ef4814f0d5fa"),
                             UserName = "Administratör"
                         });
                 });

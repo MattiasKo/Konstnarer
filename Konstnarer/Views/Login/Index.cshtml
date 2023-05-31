@@ -24,20 +24,18 @@
                 <button type="button" class="btn btn-primary">Registera</button>
             </a>
 
+            <a asp-controller="Validate" asp-action="ForgotPassword">
+                <button type="button" class="btn btn-outline-primary">Glömt lösenord?</button>
+            </a>
+
         }
     }else{
 
         if (loginInfo.IsActive == true)
         {
-
             <div class="flex-xl-shrink-1">InLoggad som: @loginInfo.UserName </div>
             await Html.RenderPartialAsync("~/Views/Login/ControllPanel.cshtml", loginInfo);
-
-
         }
-        else
-        {
-            <button type="button" class="btn btn-primary">Registera</button>
-        }
+
     }
 }

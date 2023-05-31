@@ -1,0 +1,26 @@
+﻿
+@{
+    
+   ViewData["Title"] = "Validera";
+}
+
+<h1>Validera ditt konto</h1>
+
+@using (Html.BeginForm("Validate", "Validate", FormMethod.Post))
+{
+    <input type="text" name="id" value="@ViewContext.RouteData.Values["id"].ToString()" hidden>
+ 
+    <button type="submit" value="Submit" class="btn btn-success">Validera</button>
+
+}
+@*@using (Html.BeginForm("Validate", "Register", FormMethod.Post))
+{
+    <input type="text" name="Validate" value="@ViewContext.RouteData.Values["id"];" hidden>
+    <td>Nytt lösenord:</td>
+    <td>@Html.TextBoxFor(m=>m.Password, new { @class = "form-control col-md-3",@type = "password" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.Password)</p></td>
+    <td>Bekräfta lösenord:</td>
+    <td>@Html.TextBoxFor(m=>m.ConfirmPassword, new { @class = "form-control col-md-3",@type = "password" })<p class="text-warning"> @Html.ValidationMessageFor(x => x.ConfirmPassword)</p></td>
+
+    <button type="submit" value="Submit" class="btn btn-success">Byt lösenord</button>
+
+}*@

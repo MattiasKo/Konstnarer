@@ -19,10 +19,12 @@
 
             <button class="card-img-top" type="submit" name="picId" value="@picture.Id">
             <img class="img-thumbnail" src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(picture.ImageFile))" />
-            </button>
+            
             <div class="card-body">
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <h5 class="card-title">@picture.PictureName</h5>
+                <p class="card-text">@picture.Description</p>
             </div>
+            </button>
     </form>
 
     </div>

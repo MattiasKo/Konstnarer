@@ -7,9 +7,26 @@
 
 }
 <div class="text-center">
-    <h1 class="display-4">@Model.Pictures.PictureName</h1>
+    <h1 class="display-4 ">@Model.Pictures.PictureName</h1>
+</div >
+<div class="card">
+    <img class="DetailImage card-img-top" src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.Pictures.ImageFile))" />
+    <div class="card-body">
+        <h5 class="card-title">@Model.Pictures.PictureName</h5>
+        <p class="card-text">@Model.Pictures.Description</p>
+
+        <form method="post" asp-controller="Profile" asp-action="Index">
+            <button class="btn btn-outline-primary">
+                <input type="text" value="@Model.Owner.UserId" name="userId" hidden>
+                <p>@Model.Owner.UserName</p>
+            </button>
+        </form>
+
+       @* <a href="#" class="btn btn-outline-primary">Av: @Model.Owner.UserName</></a>*@
+        <p class="text-secondary">Upladdat: @Model.Pictures.UploadDate</p>
+    </div>
 </div>
-    <img src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(Model.Pictures.ImageFile))" />
+
 
 <div>
     @if (Model.Pictures.AllowComments == true)
@@ -44,7 +61,7 @@
                     if (item2.UserId == item.UserId)
                     {
                             <form method="post" asp-controller="Profile" asp-action="Index">
-                                <button class="text-primary">
+                                <button class="btn btn-outline-primary">
                                     <input type="text" value="@item2.UserId" name="userId" hidden>
                                     <p>@item2.UserName</p>
                                 </button>

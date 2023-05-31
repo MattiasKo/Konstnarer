@@ -22,37 +22,43 @@ namespace Konstnarer.Controllers
             if (email != null || password != null)
             {
                 User login = _context.Users.FirstOrDefault(f => f.Email == email);
-                if (login.Password == password)
+                if (login == null||login.IsValidated==false)
                 {
-                    UserLogin userLogin = new()
-                    {
-                        UserName = login.UserName,
-                        UserId = login.UserId,
-                        IsActive = true
-                    };
-                    ViewData["user"] = userLogin;
-
-                    string authId = Guid.NewGuid().ToString();
-                    HttpContext.Session.SetString("AuthId", authId);
-                    HttpContext.Session.SetString("UserName",userLogin.UserName);
-                    HttpContext.Session.SetString("UserId", (userLogin.UserId).ToString());
-                    Response.Cookies.Append("AuthId", authId, new Microsoft.AspNetCore.Http.CookieOptions
-                    {
-                        Expires = DateTime.Now.AddMinutes(10)
-                    });
-                    Response.Cookies.Append("UserName", userLogin.UserName, new Microsoft.AspNetCore.Http.CookieOptions
-                    {
-                        Expires = DateTime.Now.AddMinutes(10)
-                    });
-                    //HttpContext.Session.SetString("UserId", userLogin.UserId.ToString());
-
-                    return View("Index");
+                    return RedirectToAction("Error", "Home");
                 }
-                return View();
+                if (login != null && login.IsValidated == true)
+                {
+                    if (login.Password == password)
+                    {
+                        UserLogin userLogin = new()
+                        {
+                            UserName = login.UserName,
+                            UserId = login.UserId,
+                            IsActive = true
+                        };
+                        ViewData["user"] = userLogin;
+
+                        string authId = Guid.NewGuid().ToString();
+                        HttpContext.Session.SetString("AuthId", authId);
+                        HttpContext.Session.SetString("UserName", userLogin.UserName);
+                        HttpContext.Session.SetString("UserId", (userLogin.UserId).ToString());
+                        Response.Cookies.Append("AuthId", authId, new Microsoft.AspNetCore.Http.CookieOptions
+                        {
+                            Expires = DateTime.Now.AddMinutes(10)
+                        });
+                        Response.Cookies.Append("UserName", userLogin.UserName, new Microsoft.AspNetCore.Http.CookieOptions
+                        {
+                            Expires = DateTime.Now.AddMinutes(10)
+                        });
+
+                        return RedirectToAction("Index","Home");
+                    }
+                }
+                return RedirectToAction("Error", "Home");
             }
             else
             {
-                return View();
+                return RedirectToAction("Error", "Home");
             }
         }
         public async Task<IActionResult> ControllPanel(UserLogin login)
@@ -67,26 +73,7 @@ namespace Konstnarer.Controllers
             return RedirectToAction("Error", "Home");
 
         }
-        public async Task<IActionResult> Index(UserLogin login)
-        {
-          
-            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
-            {
-                login.UserName = HttpContext.Session.GetString("UserName");
-                login.UserId = Guid.Parse(HttpContext.Session.GetString("UserId"));
-                login.IsActive = true;
-                ViewData["user"] = login;
-            }
-            else
-            {
-                login.UserName = "Anonym";
-                login.IsActive = false;
-                ViewData["user"] = login;
-            }
 
-            return View();
-
-        }
         public async Task<IActionResult> Create(UserLogin login)
         {
 
@@ -155,9 +142,16 @@ namespace Konstnarer.Controllers
             }
             return RedirectToAction("Error", "Home");
         }
-       
+        public async Task<IActionResult> Logout(UserLogin login)
+        {
+            HttpContext.Session.Remove("Auth");
+            HttpContext.Session.Remove("UserName");
+            HttpContext.Session.Remove("UserId");
+            Response.Cookies.Delete("AuthId");
+            return RedirectToAction("Index", "Home");
+        }
 
-    }
+        }
     
 
 }
