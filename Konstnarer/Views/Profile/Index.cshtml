@@ -38,15 +38,24 @@
         <table>
             <tr>
                 <th>Gästbok
+                @if (loginInfo.IsActive == true)
+                {
                 @using (Html.BeginForm("Comment", "Profile", FormMethod.Post))
                 {
                     @Html.TextBoxFor(c=>c.usersComment, new { @class = "form-control col-md-3",@type = "text" })
                         <button type="submit" value="Submit" class="btn btn-success">Skicka kommentar</button>
                     <input type="text" name="commentTo" value="@Model.ProfileUser.UserId" hidden>
-                    <input type="text" name="CommentingUserId" value="@loginInfo.UserId" hidden>
+                            <input type="text" name="CommentingUserId" value="@loginInfo.UserId" hidden>
 
-                }
-            </th>
+                        }
+                    }
+                    else
+                    {
+                    <a asp-controller="Register" asp-action="Index">
+                        <button type="button" class="btn btn-primary">Registera eller logga in för att ge en kommentar</button>
+                    </a>
+                    }
+                </th>
             </tr>
             @foreach (var comment in Model.comments.Where(c => c.PersonId == Model.ProfileUser.UserId))
             {

@@ -56,7 +56,9 @@ namespace Konstnarer.Controllers
         [HttpPost]
         public ActionResult Comment(string commentTo, string CommentingUserId,  string usersComment)
         {
-            
+            UserLogin login = new UserLogin();
+            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+            {
             ProfileComment comment = new ProfileComment();
             comment.PersonId = Guid.Parse(commentTo);
             comment.UserId = Guid.Parse(CommentingUserId);
@@ -65,7 +67,8 @@ namespace Konstnarer.Controllers
             _context.ProfileComments.Add(comment);
             _context.SaveChanges();
             return RedirectToAction("Index", new {userId = commentTo });
-            
+            }
+            return View();
         }
     } 
 }
