@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Konstnarer/Properties/ServiceDependencies/konstnarer-mvc - Web Deploy
+/Konstnarer/appsettings.json
+/Konstnarer/appsettings.json
