@@ -70,5 +70,6 @@ namespace Konstnarer.Controllers
             }
             return View();
         }
+       
     } 
 }

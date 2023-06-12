@@ -3,6 +3,7 @@ using Konstnarer.Models;
 using Konstnarer.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System.Text;
 
 namespace Konstnarer.Controllers
@@ -135,12 +136,17 @@ namespace Konstnarer.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("File", "Filen får inte vara större än 2 MB. Måste vara en bild");
+                        ModelState.AddModelError("Error", ". Filen får inte vara större än 2 MB. ");
+                        return View("Create");
                     }
                 }
+                
                 return View("UploadComplete");
             }
-            return RedirectToAction("Error", "Home");
+            ModelState.AddModelError("Error", ". Filen är inte en godkänd bild format. Behöver vara nån av dessa: .png .jpg .bmp .gif");
+
+            return View("Create");
+        
         }
         public async Task<IActionResult> Logout(UserLogin login)
         {

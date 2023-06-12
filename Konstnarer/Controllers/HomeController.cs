@@ -40,6 +40,9 @@ namespace Konstnarer.Controllers
                 login.UserId = Guid.Parse(HttpContext.Session.GetString("UserId"));
                 login.IsActive = true;
                 ViewData["user"] = login;
+
+                User userRole = _context.Users.FirstOrDefault(u => u.UserId == login.UserId);
+                ViewData["userRole"] = userRole;
             }
             else
             {
@@ -96,7 +99,32 @@ namespace Konstnarer.Controllers
             return RedirectToAction("Detail","Home",new {picId = picId});
 
         }
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            UserLogin login = new UserLogin();
+            if (Request.Cookies["AuthId"] != null && Request.Cookies["AuthId"] == HttpContext.Session.GetString("AuthId"))
+            {
+                login.UserName = HttpContext.Session.GetString("UserName");
+                login.UserId = Guid.Parse(HttpContext.Session.GetString("UserId"));
+                login.IsActive = true;
+                ViewData["user"] = login;
+            }
+            else
+            {
+                login.UserName = "Anonym";
+                login.IsActive = false;
+                ViewData["user"] = login;
+            }
 
+            Picture pic = _context.Pictures.FirstOrDefault(z => z.Id == id);
+            if (pic != null)
+            {
+                _context.Pictures.Remove(pic);
+                _context.SaveChanges();
+            }
+            return View("Delete");
+        }
 
     }
 }

@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Konstnärer.se";
     var loginInfo = ViewData["user"] as UserLogin;
+    var userRole = ViewData["userRole"] as User;
 
 }
 <div class="text-center">
@@ -21,8 +22,17 @@
                 <p>@Model.Owner.UserName</p>
             </button>
         </form>
-
-       @* <a href="#" class="btn btn-outline-primary">Av: @Model.Owner.UserName</></a>*@
+      
+            @if (loginInfo.UserId == Model.Pictures.OwnerId||userRole.Role=="Admin")
+                {
+            <form asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Pictures.Id">
+                <button class="btn btn-warning">
+                <input type="submit" value="@Model.Pictures.Id" hidden/>
+                <p>Radera</p>
+                </button>
+            </form>
+                }
+        
         <p class="text-secondary">Upladdat: @Model.Pictures.UploadDate</p>
     </div>
 </div>
@@ -73,6 +83,9 @@
                 </div>
                 </div>
             }
+           
+
+           
         </div>
        
 

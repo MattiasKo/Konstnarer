@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NuGet.Protocol.Plugins;
+using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Web.Helpers;
@@ -13,10 +14,13 @@ namespace Konstnarer.Controllers
     public class RegisterController : Controller
     {
         private readonly AppDbContext _context;
-        public RegisterController(AppDbContext Appcontext)
+        private IConfiguration _configuration;
+        public RegisterController(AppDbContext Appcontext, IConfiguration iconfig)
         {
             _context = Appcontext;
+            _configuration = iconfig;
         }
+  
         // GET: RegisterController
 
 
@@ -66,19 +70,25 @@ namespace Konstnarer.Controllers
                 RouteId = Guid.NewGuid().ToString(),
                 UserId = user.UserId,
             };
+            User UserExists = _context.Users.FirstOrDefault(x => x.Email == user.Email);
+            if (UserExists != null)
+            {
+                ModelState.AddModelError("Email", "e-posten används redan.");
+                return View(regModel);
+            }
             _context.ValidateUsers.Add(ValUser);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             MailMessage message = new System.Net.Mail.MailMessage();
-            string fromEmail = "info@splattersoft.com";
-            string password = "ge842t1sm61";
+            string fromEmail = _configuration.GetValue<string>("Credential:username");
+            string password = _configuration.GetValue<string>("Credential:password");
             string toEmail = regModel.Email;
             message.From = new MailAddress(fromEmail);
             message.To.Add(toEmail);
             message.Subject = "Validera e-post för konstarer.se";
             message.IsBodyHtml = true;
-            message.Body = "https://localhost:7217/Validate?id=" + ValUser.RouteId; ;
+            message.Body = "https://konstnarer-mvc.azurewebsites.net/Validate?id=" + ValUser.RouteId; ;
                 
             message.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
          
@@ -94,7 +104,7 @@ namespace Konstnarer.Controllers
             }
 
 
-            return RedirectToAction("RegisterComplete",regModel);
+            return RedirectToAction("RegisterComplete");
 
         }
        

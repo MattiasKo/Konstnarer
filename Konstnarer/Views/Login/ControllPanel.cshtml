@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Konstnär"+@Model.UserName;
+    ViewData["Title"] = "Konstnär "+@Model.UserName;
 }
 <div class="d-inline-flex" style="width: 18rem;">
     <form method="post" asp-controller="Profile" asp-action="Index">
@@ -15,6 +15,6 @@
     <a asp-controller="Login" asp-action="Logout">
         <button type="button" class="btn btn-secondary">Logga ut</button>
     </a>
-   
-    
+
+
 </div>

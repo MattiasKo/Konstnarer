@@ -8,9 +8,11 @@ namespace Konstnarer.Controllers
     public class ValidateController : Controller
     {
         private readonly AppDbContext _context;
-        public ValidateController(AppDbContext Appcontext)
+        private IConfiguration _configuration;
+        public ValidateController(AppDbContext Appcontext, IConfiguration iconfig)
         {
             _context = Appcontext;
+            _configuration = iconfig;
         }
         public async Task<ActionResult> Index(string? id)
         {
@@ -61,14 +63,14 @@ namespace Konstnarer.Controllers
                 _context.SaveChanges();
 
                 MailMessage message = new System.Net.Mail.MailMessage();
-                string fromEmail = "info@splattersoft.com";
-                string password = "ge842t1sm61";
+                string fromEmail = _configuration.GetValue<string>("Credential:username");
+                string password = _configuration.GetValue<string>("Credential:password");
                 string toEmail = email;
                 message.From = new MailAddress(fromEmail);
                 message.To.Add(toEmail);
                 message.Subject = "Byte av lösenord för konstarer.se";
                 message.IsBodyHtml = true;
-                message.Body = "https://localhost:7217/ForgottPassword?id=" + CPuser.RouteId; ;
+                message.Body = "https://konstnarer-mvc.azurewebsites.net/ForgottPassword?id=" + CPuser.RouteId; ;
 
                 message.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 
