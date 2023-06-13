@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Konstnärer.se";
     var loginInfo = ViewData["user"] as UserLogin;
-    var userRole = ViewData["userRole"] as User;
+    var userRole = ViewData["userRole"] as string;
 
 }
 <div class="text-center">
@@ -22,8 +22,8 @@
                 <p>@Model.Owner.UserName</p>
             </button>
         </form>
-      
-            @if (loginInfo.UserId == Model.Pictures.OwnerId||userRole.Role=="Admin")
+          
+            @if (loginInfo.UserId == Model.Pictures.OwnerId||userRole=="Admin")
                 {
             <form asp-controller="Home" asp-action="Delete" asp-route-id="@Model.Pictures.Id">
                 <button class="btn btn-warning">

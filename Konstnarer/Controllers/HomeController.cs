@@ -42,13 +42,14 @@ namespace Konstnarer.Controllers
                 ViewData["user"] = login;
 
                 User userRole = _context.Users.FirstOrDefault(u => u.UserId == login.UserId);
-                ViewData["userRole"] = userRole;
+                ViewData["userRole"] = userRole.Role;
             }
             else
             {
                 login.UserName = "Anonym";
                 login.IsActive = false;
                 ViewData["user"] = login;
+                ViewData["userRole"] = "Anonym";
             }
            
             Picture picture = _context.Pictures.FirstOrDefault(p => p.Id == picId);
