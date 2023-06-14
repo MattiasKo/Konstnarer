@@ -11,26 +11,26 @@
     <div class="column">
         
                 <h5>Bild Galleri</h5><br />
-            
-                @foreach (var picture in Model.UsersPictures.Where(c => c.OwnerId == Model.ProfileUser.UserId))
+
+        @foreach (var picture in Model.UsersPictures.OrderByDescending(p => p.UploadDate).Where(c => c.OwnerId == Model.ProfileUser.UserId))
                 {
 
-                    <div class="card d-inline-flex" style="width: 18rem;">
-                 <tr>
-                    <td>
-                        <form method="post" asp-controller="Home" asp-action="Detail">
+            <div class="box">
 
-                            <button class="card-img-top" type="submit" name="picId" value="@picture.Id">
-                                <img class="img-thumbnail" src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(picture.ImageFile))" />
-                            </button>
-                            <div class="card-body">
+
+                <form method="post" asp-controller="Home" asp-action="Detail">
+
+                    <button class="card-img-top" type="submit" name="picId" value="@picture.Id">
+                        <img class="img-thumbnail" src="@String.Format("data:image/png;base64,{0}",Convert.ToBase64String(picture.ImageFile))" />
+
+                        <div class="card-body">
                             <h5 class="card-title">@picture.PictureName</h5>
                             <p class="card-text">@picture.Description</p>
                         </div>
-                        </form>
-                    </td>
-                </tr>
-                </div>
+                    </button>
+                </form>
+
+            </div>
                 }
 
       
@@ -58,7 +58,7 @@
                     }
                 </th>
             </tr>
-            @foreach (var comment in Model.comments.Where(c => c.PersonId == Model.ProfileUser.UserId))
+            @foreach (var comment in Model.comments.OrderByDescending(p => p.Date).Where(c => c.PersonId == Model.ProfileUser.UserId))
             {
                 <tr>
                     <td>

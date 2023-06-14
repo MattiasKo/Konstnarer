@@ -10,7 +10,7 @@
     <h1 class="text-center">Välkommen till svenska konstnärer</h1>
 
 
-@foreach (var picture in Model.OrderBy(p => p.Id))
+@foreach (var picture in Model.OrderByDescending(p => p.UploadDate))
 {
     <div class="card d-inline-flex" style="width: 18rem;">
       
